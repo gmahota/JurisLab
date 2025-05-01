@@ -1,4 +1,4 @@
-import { QueryClient } from "@tanstack/react-query";
+import { QueryClient, QueryFunctionContext } from "@tanstack/react-query";
 
 /**
  * Utility function to validate HTTP response status
@@ -48,13 +48,22 @@ export async function apiRequest<T = any>(
 type UnauthorizedBehavior = "returnNull" | "throw";
 
 /**
+ * Type-safe query function for TanStack Query v5
+ */
+type CustomQueryFunctionContext = QueryFunctionContext;
+
+/**
  * Factory function to create query functions with consistent error handling
  */
 export const getQueryFn = <T>(options: {
   on401: UnauthorizedBehavior;
 }) => {
-  return async ({ queryKey }: { queryKey: string[] }): Promise<T | null> => {
-    const [url] = queryKey;
+  return async (context: CustomQueryFunctionContext): Promise<T | null> => {
+    const { queryKey } = context;
+    // Safely extract URL from queryKey which might be any string or object
+    const url = Array.isArray(queryKey) && typeof queryKey[0] === 'string' 
+      ? queryKey[0] 
+      : String(queryKey);
     
     try {
       const res = await fetch(url);
@@ -86,7 +95,6 @@ export const queryClient = new QueryClient({
       retry: 1,
       staleTime: 1000 * 60 * 5, // 5 minutes
       refetchOnWindowFocus: false,
-      queryFn: getQueryFn<any>({ on401: "throw" }),
     },
   },
 });

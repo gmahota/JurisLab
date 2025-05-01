@@ -26,13 +26,21 @@ export function Pagination({
       pages.add(i);
     }
     
-    return [...pages].sort((a, b) => a - b);
+    // Convert Set to Array for TypeScript compatibility (with target below es2015)
+    const pagesArray: number[] = [];
+    pages.forEach(page => pagesArray.push(page));
+    return pagesArray.sort((a, b) => a - b);
   };
   
   const pages = generatePages();
   
   // Generate page items with ellipsis for gaps
-  const pageItems = [];
+  // Define proper types for PageItem
+  type PageItem = 
+    | { type: "ellipsis"; key: string; page?: undefined }
+    | { type: "page"; key: string; page: number };
+    
+  const pageItems: PageItem[] = [];
   let previousPage = 0;
   
   for (const page of pages) {

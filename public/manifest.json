@@ -1,21 +1,43 @@
 {
-  "name": "JurisLab",
+  "name": "JurisLab - Judicial Decisions and Labor Contracts Platform",
   "short_name": "JurisLab",
-  "description": "AI-enhanced legal research and document management platform",
+  "description": "AI-powered platform for legal research and document management",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#3182ce",
+  "theme_color": "#3182CE",
   "icons": [
     {
-      "src": "/images/icon-192.png",
+      "src": "/images/icon-192.svg",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     },
     {
-      "src": "/images/icon-512.png",
+      "src": "/images/icon-512.svg",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
-  ]
+  ],
+  "shortcuts": [
+    {
+      "name": "Judicial Decisions",
+      "short_name": "Decisions",
+      "description": "Browse judicial decisions",
+      "url": "/judicial-decisions",
+      "icons": [{ "src": "/images/icon-192.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Labor Contracts",
+      "short_name": "Contracts",
+      "description": "Browse labor contracts",
+      "url": "/labor-contracts",
+      "icons": [{ "src": "/images/icon-192.svg", "sizes": "192x192" }]
+    }
+  ],
+  "categories": ["legal", "productivity", "business"],
+  "orientation": "portrait-primary",
+  "lang": "en-US",
+  "prefer_related_applications": false
 }

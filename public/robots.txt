@@ -2,5 +2,8 @@
 User-agent: *
 Allow: /
 
+# Disallow access to API routes
+Disallow: /api/
+
 # Sitemap location
 Sitemap: https://jurislab.replit.app/sitemap.xml
