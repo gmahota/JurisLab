@@ -9,6 +9,8 @@ type JudicialDecisionFilters = {
   topics?: string[];
   sortOrder?: string;
   searchQuery?: string;
+  page?: number;
+  limit?: number;
 };
 
 type LaborContractFilters = {
@@ -97,8 +99,77 @@ export const storage = {
         // Default sort by most recent
         query = query.orderBy(desc(schema.judicialDecisions.updatedAt));
       }
+      // Count total decisions for pagination
+      const countQuery = db
+        .select({ count: sql<number>`count(*)` })
+        .from(schema.judicialDecisions);
       
-      return await query;
+      // Apply the same filters to count query
+      if (filters.dateRange) {
+        const now = new Date();
+        let startDate: Date;
+        
+        switch (filters.dateRange) {
+          case 'year':
+            startDate = subYears(now, 1);
+            break;
+          case 'month':
+            startDate = subMonths(now, 1);
+            break;
+          case 'custom':
+            startDate = subYears(now, 5); // Default to 5 years
+            break;
+          default: // 'all' or undefined
+            startDate = new Date(0); // Beginning of time
+        }
+        
+        countQuery.where(gte(schema.judicialDecisions.date, formatISO(startDate, { representation: 'date' })));
+      }
+      
+      if (filters.jurisdictions && filters.jurisdictions.length > 0) {
+        const conditions = filters.jurisdictions.map(jurisdiction => 
+          eq(schema.judicialDecisions.jurisdiction, jurisdiction)
+        );
+        countQuery.where(or(...conditions));
+      }
+      
+      if (filters.topics && filters.topics.length > 0) {
+        const conditions = filters.topics.map(topic => 
+          eq(schema.judicialDecisions.category, topic)
+        );
+        countQuery.where(or(...conditions));
+      }
+      
+      if (filters.searchQuery) {
+        countQuery.where(
+          or(
+            like(schema.judicialDecisions.title, `%${filters.searchQuery}%`),
+            like(schema.judicialDecisions.summary, `%${filters.searchQuery}%`),
+            like(schema.judicialDecisions.caseNumber, `%${filters.searchQuery}%`),
+            like(schema.judicialDecisions.parties, `%${filters.searchQuery}%`)
+          )
+        );
+      }
+      
+      // Get total count
+      const [{ count }] = await countQuery;
+      
+      // Apply pagination
+      const page = filters.page || 1;
+      const limit = filters.limit || 10;
+      const offset = (page - 1) * limit;
+      
+      query = query.limit(limit).offset(offset);
+      
+      // Execute final query
+      const decisions = await query;
+      
+      return {
+        decisions,
+        totalPages: Math.ceil(count / limit),
+        currentPage: page,
+        totalDecisions: count
+      };
     } catch (error) {
       console.error("Error in getJudicialDecisions:", error);
       throw error;
