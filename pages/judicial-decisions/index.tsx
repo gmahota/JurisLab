@@ -52,8 +52,9 @@ export default function JudicialDecisions() {
     },
   });
 
-  const handleDecisionClick = (decision: JudicialDecision) => {
-    setSelectedDecision(decision);
+  const handleDecisionClick = (decision: any) => {
+    // Make sure we have all the required fields for a judicial decision
+    setSelectedDecision(decision as JudicialDecision);
   };
 
   const handleCloseDecisionDetail = () => {

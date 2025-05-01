@@ -2,7 +2,6 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/judicial-decisions": "pages/judicial-decisions.js",
-  "/labor-contracts": "pages/labor-contracts.js",
+  "/": "pages/index.js",
   "/ai-insights": "pages/ai-insights.js"
 }

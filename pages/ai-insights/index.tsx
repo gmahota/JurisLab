@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import MainLayout from '../../client/src/components/layout/main-layout';
 import { Card, CardContent, CardHeader, CardTitle } from '../../client/src/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../client/src/components/ui/tabs';
 import { apiRequest } from '../../client/src/lib/queryClient';
@@ -59,16 +58,15 @@ export default function AiInsights() {
   };
 
   return (
-    <MainLayout>
-      <div className="container mx-auto p-4">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">AI Insights</h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-              AI-powered analytics and trends about legal documents
-            </p>
-          </div>
+    <div className="container mx-auto p-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">AI Insights</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+            AI-powered analytics and trends about legal documents
+          </p>
         </div>
+      </div>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
           <TabsList className="grid w-full grid-cols-3">
@@ -237,6 +235,5 @@ export default function AiInsights() {
           </TabsContent>
         </Tabs>
       </div>
-    </MainLayout>
   );
 }
