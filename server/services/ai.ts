@@ -5,6 +5,18 @@ import { db } from "@db";
 // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+// Utility function to safely parse JSON
+function safeJsonParse<T>(jsonString: string | null, defaultValue: T): T {
+  if (!jsonString) return defaultValue;
+  
+  try {
+    return JSON.parse(jsonString) as T;
+  } catch (error) {
+    console.error("Error parsing JSON:", error);
+    return defaultValue;
+  }
+}
+
 interface AnalysisResult {
   summary: string;
   keyPoints: string[];
@@ -45,7 +57,13 @@ export const aiService = {
         response_format: { type: "json_object" }
       });
       
-      const result = JSON.parse(response.choices[0].message.content) as AnalysisResult;
+      const defaultResult: AnalysisResult = {
+        summary: "Analysis could not be generated",
+        keyPoints: ["No analysis available"],
+        citations: [],
+        recommendations: []
+      };
+      const result = safeJsonParse(response.choices[0].message.content, defaultResult);
       
       // Save the analysis as an AI insight
       await db.insert(aiInsights).values({
@@ -55,7 +73,7 @@ export const aiService = {
         documentId: decision.id,
         insightType: "analysis",
         createdAt: new Date()
-      } as any);
+      });
       
       return result;
     } catch (error) {
@@ -93,7 +111,13 @@ export const aiService = {
         response_format: { type: "json_object" }
       });
       
-      const result = JSON.parse(response.choices[0].message.content) as AnalysisResult;
+      const defaultResult: AnalysisResult = {
+        summary: "Analysis could not be generated",
+        keyPoints: ["No analysis available"],
+        citations: [],
+        recommendations: []
+      };
+      const result = safeJsonParse(response.choices[0].message.content, defaultResult);
       
       // Save the analysis as an AI insight
       await db.insert(aiInsights).values({
@@ -142,7 +166,7 @@ export const aiService = {
         messages: [{ role: "user", content: prompt }]
       });
       
-      return response.choices[0].message.content;
+      return response.choices[0].message.content || "No analysis could be generated.";
     } catch (error) {
       console.error("Error generating comparative analysis:", error);
       throw new Error("Failed to generate comparative analysis");
@@ -193,7 +217,13 @@ export const aiService = {
         response_format: { type: "json_object" }
       });
       
-      return JSON.parse(response.choices[0].message.content);
+      const defaultResult = {
+        emergingTrends: [{ title: "No data", content: "Insufficient data to determine trends", trend: "neutral" as const }],
+        topTopics: [{ name: "No data", percentage: 0 }],
+        industrySummary: "Insufficient data to generate summary"
+      };
+      
+      return safeJsonParse(response.choices[0].message.content, defaultResult);
     } catch (error) {
       console.error("Error identifying legal trends:", error);
       throw new Error("Failed to identify legal trends");
