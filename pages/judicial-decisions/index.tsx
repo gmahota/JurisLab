@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import MainLayout from '../../client/src/components/layout/main-layout';
 import { DocumentList } from '../../client/src/components/document-list';
 import { DocumentDetail } from '../../client/src/components/document-detail';
 import { FiltersPanel } from '../../client/src/components/filters-panel';
@@ -82,66 +81,64 @@ export default function JudicialDecisions() {
   const totalPages = data?.totalPages || 1;
 
   return (
-    <MainLayout>
-      <div className="container mx-auto p-4 flex h-full">
-        <div className={`flex-1 ${selectedDecision ? 'hidden md:block' : ''}`}>
-          <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div>
-              <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Judicial Decisions</h1>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                {isLoading ? 'Loading...' : `${data?.total || 0} decisions found`}
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-2 self-stretch sm:self-auto">
-              {hasActiveFilters && (
-                <Button 
-                  variant="outline" 
-                  onClick={clearFilters}
-                  className="gap-2"
-                >
-                  <FilterX className="h-4 w-4" />
-                  Clear Filters
-                </Button>
-              )}
+    <div className="container mx-auto p-4 flex h-full">
+      <div className={`flex-1 ${selectedDecision ? 'hidden md:block' : ''}`}>
+        <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Judicial Decisions</h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+              {isLoading ? 'Loading...' : `${data?.total || 0} decisions found`}
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-2 self-stretch sm:self-auto">
+            {hasActiveFilters && (
               <Button 
-                onClick={() => setIsFiltersPanelOpen(true)}
+                variant="outline" 
+                onClick={clearFilters}
                 className="gap-2"
               >
-                <SlidersHorizontal className="h-4 w-4" />
-                Filters
+                <FilterX className="h-4 w-4" />
+                Clear Filters
               </Button>
-            </div>
+            )}
+            <Button 
+              onClick={() => setIsFiltersPanelOpen(true)}
+              className="gap-2"
+            >
+              <SlidersHorizontal className="h-4 w-4" />
+              Filters
+            </Button>
           </div>
-          
-          <DocumentList
-            documents={decisions}
-            isLoading={isLoading}
-            onDocumentClick={handleDecisionClick}
-            documentType="judicial"
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            emptyMessage="No judicial decisions found. Try adjusting your filters."
-          />
         </div>
         
-        {selectedDecision && (
-          <DocumentDetail
-            document={selectedDecision}
-            onClose={handleCloseDecisionDetail}
-            documentType="judicial"
-          />
-        )}
-        
-        {isFiltersPanelOpen && (
-          <FiltersPanel
-            filters={filters}
-            onFilterChange={handleFilterChange}
-            onClose={() => setIsFiltersPanelOpen(false)}
-            type="judicial"
-          />
-        )}
+        <DocumentList
+          documents={decisions}
+          isLoading={isLoading}
+          onDocumentClick={handleDecisionClick}
+          documentType="judicial"
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          emptyMessage="No judicial decisions found. Try adjusting your filters."
+        />
       </div>
-    </MainLayout>
+      
+      {selectedDecision && (
+        <DocumentDetail
+          document={selectedDecision}
+          onClose={handleCloseDecisionDetail}
+          documentType="judicial"
+        />
+      )}
+      
+      {isFiltersPanelOpen && (
+        <FiltersPanel
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          onClose={() => setIsFiltersPanelOpen(false)}
+          type="judicial"
+        />
+      )}
+    </div>
   );
 }
