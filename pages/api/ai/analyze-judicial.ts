@@ -1,39 +1,46 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { createRouter } from 'next-connect';
-import { storage } from '../../../server/storage';
-import { aiService } from '../../../server/services/ai';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { db } from '@db';
+import { judicialDecisions } from '@shared/schema';
+import { eq } from 'drizzle-orm';
+import { openaiService } from '../../../server/services/openai-service';
 
-const router = createRouter<NextApiRequest, NextApiResponse>();
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ message: 'Method not allowed' });
+  }
 
-// Analyze a judicial decision
-router.post(async (req, res) => {
   try {
-    const { id } = req.body;
+    const { id } = req.query;
     
-    if (!id) {
-      return res.status(400).json({ error: 'Missing required parameter: id' });
+    if (!id || Array.isArray(id)) {
+      return res.status(400).json({ message: 'Invalid decision ID' });
     }
+
+    const decisionId = parseInt(id, 10);
     
+    if (isNaN(decisionId)) {
+      return res.status(400).json({ message: 'Invalid decision ID format' });
+    }
+
     // Fetch the judicial decision
-    const decision = await storage.getJudicialDecisionById(parseInt(id));
-    
+    const decision = await db.query.judicialDecisions.findFirst({
+      where: eq(judicialDecisions.id, decisionId)
+    });
+
     if (!decision) {
-      return res.status(404).json({ error: 'Judicial decision not found' });
+      return res.status(404).json({ message: 'Judicial decision not found' });
     }
-    
-    // Generate AI analysis
-    const analysis = await aiService.analyzeJudicialDecision(decision);
-    
+
+    // Use OpenAI service to analyze the decision
+    const analysis = await openaiService.analyzeJudicialDecision(decision);
+
+    // Return the analysis
     return res.status(200).json(analysis);
   } catch (error) {
     console.error('Error analyzing judicial decision:', error);
-    return res.status(500).json({ error: 'Failed to analyze judicial decision' });
+    return res.status(500).json({ 
+      message: 'An error occurred while analyzing the judicial decision',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
   }
-});
-
-export default router.handler({
-  onError: (err, req, res) => {
-    console.error(err);
-    res.status(500).json({ error: 'Something went wrong' });
-  }
-});
+}

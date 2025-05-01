@@ -12,6 +12,19 @@ const nextConfig = {
     config.externals = [...config.externals, { canvas: "canvas" }];
     return config;
   },
+  // Add aliases to match previous Vite configuration
+  experimental: {
+    esmExternals: true
+  },
+  // Ensure Next.js serves the API routes we created
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: '/api/:path*',
+      }
+    ];
+  },
 };
 
 export default nextConfig;

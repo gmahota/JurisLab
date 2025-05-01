@@ -1,39 +1,46 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { createRouter } from 'next-connect';
-import { storage } from '../../../server/storage';
-import { aiService } from '../../../server/services/ai';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { db } from '@db';
+import { laborContracts } from '@shared/schema';
+import { eq } from 'drizzle-orm';
+import { openaiService } from '../../../server/services/openai-service';
 
-const router = createRouter<NextApiRequest, NextApiResponse>();
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ message: 'Method not allowed' });
+  }
 
-// Analyze a labor contract
-router.post(async (req, res) => {
   try {
-    const { id } = req.body;
+    const { id } = req.query;
     
-    if (!id) {
-      return res.status(400).json({ error: 'Missing required parameter: id' });
+    if (!id || Array.isArray(id)) {
+      return res.status(400).json({ message: 'Invalid contract ID' });
     }
+
+    const contractId = parseInt(id, 10);
     
+    if (isNaN(contractId)) {
+      return res.status(400).json({ message: 'Invalid contract ID format' });
+    }
+
     // Fetch the labor contract
-    const contract = await storage.getLaborContractById(parseInt(id));
-    
+    const contract = await db.query.laborContracts.findFirst({
+      where: eq(laborContracts.id, contractId)
+    });
+
     if (!contract) {
-      return res.status(404).json({ error: 'Labor contract not found' });
+      return res.status(404).json({ message: 'Labor contract not found' });
     }
-    
-    // Generate AI analysis
-    const analysis = await aiService.analyzeLaborContract(contract);
-    
+
+    // Use OpenAI service to analyze the contract
+    const analysis = await openaiService.analyzeLaborContract(contract);
+
+    // Return the analysis
     return res.status(200).json(analysis);
   } catch (error) {
     console.error('Error analyzing labor contract:', error);
-    return res.status(500).json({ error: 'Failed to analyze labor contract' });
+    return res.status(500).json({ 
+      message: 'An error occurred while analyzing the labor contract',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
   }
-});
-
-export default router.handler({
-  onError: (err, req, res) => {
-    console.error(err);
-    res.status(500).json({ error: 'Something went wrong' });
-  }
-});
+}
