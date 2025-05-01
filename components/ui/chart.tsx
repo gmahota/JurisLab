@@ -1,54 +1,58 @@
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
-// Dynamically import ApexCharts with SSR disabled
-const ApexChart = dynamic(() => import("apexcharts/dist/apexcharts").then(() => import("react-apexcharts")), { 
-  ssr: false,
-  loading: () => <div className="h-64 w-full bg-slate-100 dark:bg-slate-800 animate-pulse rounded-md"></div>
-});
+// Dynamically import ApexCharts to avoid SSR issues
+const ReactApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 interface ChartProps {
-  type: "line" | "area" | "bar" | "pie" | "donut" | "radialBar" | "scatter" | "bubble" | "heatmap";
-  height?: number;
-  width?: number | string;
+  type: 
+    | "line" 
+    | "area" 
+    | "bar" 
+    | "pie" 
+    | "donut" 
+    | "radialBar" 
+    | "scatter" 
+    | "bubble" 
+    | "heatmap" 
+    | "candlestick" 
+    | "boxPlot" 
+    | "radar" 
+    | "polarArea" 
+    | "rangeBar" 
+    | "rangeArea" 
+    | "treemap";
+  height: number;
   options: any;
   series: any[];
-  className?: string;
 }
 
-export function Chart({ type, height = 350, width = "100%", options, series, className }: ChartProps) {
-  const [mounted, setMounted] = useState(false);
+export function Chart({ type, height, options, series }: ChartProps) {
+  // Using a state to ensure client-side only rendering
+  const [isClient, setIsClient] = useState(false);
 
-  // Only render the chart on the client side to avoid SSR issues
   useEffect(() => {
-    setMounted(true);
+    setIsClient(true);
   }, []);
 
-  // Apply dark mode theme to chart
-  const chartOptions = {
-    ...options,
-    theme: {
-      mode: typeof document !== 'undefined' && document.documentElement.classList.contains('dark') ? 'dark' : 'light',
-      ...options.theme
-    },
-    chart: {
-      ...options.chart,
-      background: 'transparent'
-    },
-    colors: options.colors || ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6']
-  };
+  if (!isClient) {
+    // Return a placeholder with the same dimensions
+    return (
+      <div 
+        className="flex items-center justify-center bg-secondary/30" 
+        style={{ height: `${height}px` }}
+      >
+        <p className="text-muted-foreground text-sm">Loading chart...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className={`${className || ''}`}>
-      {mounted && (
-        <ApexChart
-          type={type}
-          height={height}
-          width={width}
-          options={chartOptions}
-          series={series}
-        />
-      )}
-    </div>
+    <ReactApexChart
+      type={type}
+      height={height}
+      options={options}
+      series={series}
+    />
   );
 }

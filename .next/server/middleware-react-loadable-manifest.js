@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST="{\"components/ui/chart.tsx -> apexcharts/dist/apexcharts\":{\"id\":\"components/ui/chart.tsx -> apexcharts/dist/apexcharts\",\"files\":[\"static/chunks/_pages-dir-browser_node_modules_apexcharts_dist_apexcharts_js.js\"]},\"components/ui/chart.tsx -> react-apexcharts\":{\"id\":\"components/ui/chart.tsx -> react-apexcharts\",\"files\":[\"static/chunks/_pages-dir-browser_node_modules_react-apexcharts_dist_react-apexcharts_min_js.js\"]}}"
+self.__REACT_LOADABLE_MANIFEST="{}"

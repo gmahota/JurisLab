@@ -1,138 +1,120 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+/**
+ * Combines multiple class names and Tailwind classes together
+ */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/**
+ * Formats a date into a localized string
+ */
 export function formatDate(date: Date | string | null | undefined): string {
-  if (!date) return '';
+  if (!date) return "N/A";
   
   try {
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    const dateObj = typeof date === "string" ? new Date(date) : date;
     return dateObj instanceof Date && !isNaN(dateObj.getTime())
-      ? new Intl.DateTimeFormat('en-US', { 
-          year: 'numeric', 
-          month: 'long', 
-          day: 'numeric' 
-        }).format(dateObj)
-      : '';
-  } catch {
-    return '';
+      ? dateObj.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        })
+      : "N/A";
+  } catch (error) {
+    return "N/A";
   }
 }
 
+/**
+ * Truncates text to a specified length and adds ellipsis
+ */
 export function truncateText(text: string, maxLength: number): string {
-  if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength) + '...';
+  if (!text) return "";
+  return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
 }
 
+/**
+ * Returns a color scheme for a given jurisdiction
+ */
 export function getJurisdictionColor(jurisdiction: string): {
-  bg: string;
-  text: string;
-  darkBg: string;
-  darkText: string;
+  textColor: string;
+  bgColor: string;
+  borderColor: string;
 } {
-  switch (jurisdiction.toLowerCase()) {
-    case 'supreme court':
-      return {
-        bg: 'bg-blue-100',
-        text: 'text-blue-800',
-        darkBg: 'dark:bg-blue-900/50',
-        darkText: 'dark:text-blue-300'
-      };
-    case 'federal court':
-      return {
-        bg: 'bg-green-100',
-        text: 'text-green-800',
-        darkBg: 'dark:bg-green-900/50',
-        darkText: 'dark:text-green-300'
-      };
-    case 'state court':
-      return {
-        bg: 'bg-purple-100',
-        text: 'text-purple-800',
-        darkBg: 'dark:bg-purple-900/50',
-        darkText: 'dark:text-purple-300'
-      };
-    case 'administrative':
-      return {
-        bg: 'bg-amber-100',
-        text: 'text-amber-800',
-        darkBg: 'dark:bg-amber-900/50',
-        darkText: 'dark:text-amber-300'
-      };
-    default:
-      return {
-        bg: 'bg-slate-100',
-        text: 'text-slate-800',
-        darkBg: 'dark:bg-slate-700',
-        darkText: 'dark:text-slate-300'
-      };
-  }
+  const hash = jurisdiction.split("").reduce((hash, char) => {
+    return (hash * 31 + char.charCodeAt(0)) % 8;
+  }, 0);
+
+  const colorSchemes = [
+    { textColor: "text-blue-700", bgColor: "bg-blue-50", borderColor: "border-blue-200" },
+    { textColor: "text-green-700", bgColor: "bg-green-50", borderColor: "border-green-200" },
+    { textColor: "text-purple-700", bgColor: "bg-purple-50", borderColor: "border-purple-200" },
+    { textColor: "text-amber-700", bgColor: "bg-amber-50", borderColor: "border-amber-200" },
+    { textColor: "text-red-700", bgColor: "bg-red-50", borderColor: "border-red-200" },
+    { textColor: "text-indigo-700", bgColor: "bg-indigo-50", borderColor: "border-indigo-200" },
+    { textColor: "text-pink-700", bgColor: "bg-pink-50", borderColor: "border-pink-200" },
+    { textColor: "text-teal-700", bgColor: "bg-teal-50", borderColor: "border-teal-200" },
+  ];
+
+  return colorSchemes[hash];
 }
 
+/**
+ * Returns a color scheme for a given contract type
+ */
 export function getContractTypeColor(type: string): {
-  bg: string;
-  text: string;
-  darkBg: string;
-  darkText: string;
+  textColor: string;
+  bgColor: string;
+  borderColor: string;
 } {
-  switch (type.toLowerCase()) {
-    case 'employment':
-    case 'standard employment agreement':
-      return {
-        bg: 'bg-secondary-100',
-        text: 'text-secondary-800',
-        darkBg: 'dark:bg-secondary-900/50',
-        darkText: 'dark:text-secondary-300'
-      };
-    case 'remote work':
-    case 'remote work agreement':
-      return {
-        bg: 'bg-secondary-100',
-        text: 'text-secondary-800',
-        darkBg: 'dark:bg-secondary-900/50',
-        darkText: 'dark:text-secondary-300'
-      };
-    case 'confidentiality':
-    case 'non-disclosure agreement':
-      return {
-        bg: 'bg-secondary-100',
-        text: 'text-secondary-800',
-        darkBg: 'dark:bg-secondary-900/50',
-        darkText: 'dark:text-secondary-300'
-      };
-    case 'consulting':
-    case 'independent contractor agreement':
-      return {
-        bg: 'bg-secondary-100',
-        text: 'text-secondary-800',
-        darkBg: 'dark:bg-secondary-900/50',
-        darkText: 'dark:text-secondary-300'
-      };
-    case 'termination':
-    case 'separation agreement':
-      return {
-        bg: 'bg-secondary-100',
-        text: 'text-secondary-800',
-        darkBg: 'dark:bg-secondary-900/50',
-        darkText: 'dark:text-secondary-300'
-      };
-    case 'collective':
-    case 'collective bargaining template':
-      return {
-        bg: 'bg-secondary-100',
-        text: 'text-secondary-800',
-        darkBg: 'dark:bg-secondary-900/50',
-        darkText: 'dark:text-secondary-300'
-      };
-    default:
-      return {
-        bg: 'bg-slate-100',
-        text: 'text-slate-800',
-        darkBg: 'dark:bg-slate-700',
-        darkText: 'dark:text-slate-300'
-      };
-  }
+  const typeMap: Record<string, {
+    textColor: string;
+    bgColor: string;
+    borderColor: string;
+  }> = {
+    "Employment": {
+      textColor: "text-blue-700",
+      bgColor: "bg-blue-50",
+      borderColor: "border-blue-200"
+    },
+    "Non-Disclosure": {
+      textColor: "text-purple-700",
+      bgColor: "bg-purple-50",
+      borderColor: "border-purple-200"
+    },
+    "Service": {
+      textColor: "text-green-700",
+      bgColor: "bg-green-50",
+      borderColor: "border-green-200"
+    },
+    "Lease": {
+      textColor: "text-amber-700",
+      bgColor: "bg-amber-50",
+      borderColor: "border-amber-200"
+    },
+    "Consulting": {
+      textColor: "text-indigo-700",
+      bgColor: "bg-indigo-50",
+      borderColor: "border-indigo-200"
+    },
+    "Partnership": {
+      textColor: "text-pink-700",
+      bgColor: "bg-pink-50",
+      borderColor: "border-pink-200"
+    },
+    "Vendor": {
+      textColor: "text-teal-700",
+      bgColor: "bg-teal-50",
+      borderColor: "border-teal-200"
+    },
+  };
+
+  return typeMap[type] || {
+    textColor: "text-gray-700",
+    bgColor: "bg-gray-50",
+    borderColor: "border-gray-200"
+  };
 }

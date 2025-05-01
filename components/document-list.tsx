@@ -1,11 +1,19 @@
-import { Fragment } from "react";
+import React from "react";
+import { DocumentCard } from "@/components/document-card";
+import { Pagination } from "@/components/ui/pagination";
 import { JudicialDecision, LaborContract } from "@shared/schema";
-import { DocumentCard } from "./document-card";
-import { Pagination } from "./pagination";
-import { Inbox } from "lucide-react";
+import { 
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle 
+} from "@/components/ui/card";
+import { Search, FileQuestion, Inbox } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface DocumentListProps {
-  documents: JudicialDecision[] | LaborContract[];
+  documents: (JudicialDecision | LaborContract)[];
   isLoading: boolean;
   onDocumentClick: (document: JudicialDecision | LaborContract) => void;
   documentType: "judicial" | "contract";
@@ -23,46 +31,73 @@ export function DocumentList({
   currentPage = 1,
   totalPages = 1,
   onPageChange,
-  emptyMessage = "No documents found. Try adjusting your filters."
+  emptyMessage = "No documents found",
 }: DocumentListProps) {
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {Array(6)
+          .fill(null)
+          .map((_, i) => (
+            <Card key={i} className="h-[280px]">
+              <CardHeader className="pb-2">
+                <Skeleton className="h-6 w-3/4" />
+              </CardHeader>
+              <CardContent className="py-2">
+                <Skeleton className="h-4 w-full mb-2" />
+                <Skeleton className="h-4 w-5/6 mb-2" />
+                <Skeleton className="h-4 w-4/6 mb-4" />
+                <Skeleton className="h-4 w-1/3 mb-2" />
+                <Skeleton className="h-4 w-1/2 mb-2" />
+                <Skeleton className="h-4 w-2/5" />
+              </CardContent>
+            </Card>
+          ))}
+      </div>
+    );
+  }
+
+  if (!documents || documents.length === 0) {
+    return (
+      <Card className="w-full min-h-[300px] flex flex-col items-center justify-center">
+        <CardHeader className="text-center">
+          <div className="mx-auto mb-4 bg-secondary p-3 rounded-full">
+            {documentType === "judicial" ? (
+              <FileQuestion className="h-10 w-10 text-muted-foreground" />
+            ) : (
+              <Inbox className="h-10 w-10 text-muted-foreground" />
+            )}
+          </div>
+          <CardTitle>No documents found</CardTitle>
+          <CardDescription>
+            {emptyMessage}
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
   return (
-    <div className="flex-1 overflow-y-auto bg-slate-50 dark:bg-slate-900 p-6">
-      {isLoading ? (
-        <div className="flex justify-center p-6">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
+    <div className="space-y-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {documents.map((doc) => (
+          <DocumentCard
+            key={doc.id}
+            document={doc}
+            documentType={documentType}
+            onClick={() => onDocumentClick(doc)}
+          />
+        ))}
+      </div>
+
+      {totalPages > 1 && onPageChange && (
+        <div className="flex justify-center mt-8">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={onPageChange}
+          />
         </div>
-      ) : documents.length === 0 ? (
-        <div className="h-full flex items-center justify-center">
-          <div className="text-center p-6 max-w-md">
-            <Inbox className="h-16 w-16 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-slate-900 dark:text-white mb-2">No documents found</h3>
-            <p className="text-slate-500 dark:text-slate-400">
-              {emptyMessage}
-            </p>
-          </div>
-        </div>
-      ) : (
-        <Fragment>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {documents.map((document) => (
-              <DocumentCard
-                key={`${documentType}-${document.id}`}
-                document={document}
-                documentType={documentType}
-                onClick={() => onDocumentClick(document)}
-              />
-            ))}
-          </div>
-          
-          {totalPages > 1 && onPageChange && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={onPageChange}
-              className="mt-8"
-            />
-          )}
-        </Fragment>
       )}
     </div>
   );
