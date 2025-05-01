@@ -2,7 +2,10 @@ import express, { type Request, Response, NextFunction } from "express";
 import { createServer } from "http";
 import next from "next";
 import { registerRoutes } from "./routes";
-import { log } from "./vite";
+// Define logging function
+function log(message: string, source = "next") {
+  console.log(`[${source}] ${message}`);
+}
 
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });

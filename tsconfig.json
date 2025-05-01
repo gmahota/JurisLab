@@ -1,6 +1,17 @@
 {
-  "include": ["client/src/**/*", "db/**/*", "server/**/*", "pages/**/*", "shared/**/*"],
-  "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
+  "include": [
+    "client/src/**/*",
+    "db/**/*",
+    "server/**/*",
+    "pages/**/*",
+    "shared/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "dist",
+    "**/*.test.ts"
+  ],
   "compilerOptions": {
     "incremental": true,
     "tsBuildInfoFile": "./node_modules/typescript/tsbuildinfo",
@@ -8,7 +19,11 @@
     "target": "es5",
     "module": "ESNext",
     "strict": true,
-    "lib": ["esnext", "dom", "dom.iterable"],
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable"
+    ],
     "jsx": "preserve",
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -17,17 +32,38 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "baseUrl": ".",
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "paths": {
-      "@db": ["./db/index.ts"],
-      "@db/*": ["./db/*"],
-      "@/*": ["./client/src/*"],
-      "@shared/*": ["./shared/*"],
-      "@components/*": ["./client/src/components/*"],
-      "@lib/*": ["./client/src/lib/*"],
-      "@hooks/*": ["./client/src/hooks/*"],
-      "@pages/*": ["./pages/*"],
-      "@styles/*": ["./client/src/styles/*"]
-    }
+      "@db": [
+        "./db/index.ts"
+      ],
+      "@db/*": [
+        "./db/*"
+      ],
+      "@/*": [
+        "./client/src/*"
+      ],
+      "@shared/*": [
+        "./shared/*"
+      ],
+      "@components/*": [
+        "./client/src/components/*"
+      ],
+      "@lib/*": [
+        "./client/src/lib/*"
+      ],
+      "@hooks/*": [
+        "./client/src/hooks/*"
+      ],
+      "@pages/*": [
+        "./pages/*"
+      ],
+      "@styles/*": [
+        "./client/src/styles/*"
+      ]
+    },
+    "allowJs": true
   }
 }
