@@ -97,15 +97,27 @@ async function seed() {
     ];
 
     for (const decision of judicialDecisions) {
-      await db
-        .insert(schema.judicialDecisions)
-        .values({
-          ...decision,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        })
-        .onConflictDoNothing({ target: schema.judicialDecisions.caseNumber })
-        .returning();
+      try {
+        // Check if record already exists
+        const existing = await db.query.judicialDecisions.findFirst({
+          where: (table, { eq }) => eq(table.caseNumber, decision.caseNumber)
+        });
+        
+        if (!existing) {
+          await db
+            .insert(schema.judicialDecisions)
+            .values({
+              ...decision,
+              createdAt: new Date(),
+              updatedAt: new Date()
+            })
+            .returning();
+        } else {
+          console.log(`Decision with case number ${decision.caseNumber} already exists, skipping`);
+        }
+      } catch (error) {
+        console.error(`Error adding judicial decision ${decision.title}:`, error);
+      }
     }
 
     console.log(`Added ${judicialDecisions.length} judicial decisions`);
@@ -175,15 +187,27 @@ async function seed() {
     ];
 
     for (const contract of laborContracts) {
-      await db
-        .insert(schema.laborContracts)
-        .values({
-          ...contract,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        })
-        .onConflictDoNothing({ target: schema.laborContracts.title })
-        .returning();
+      try {
+        // Check if record already exists
+        const existing = await db.query.laborContracts.findFirst({
+          where: (table, { eq }) => eq(table.title, contract.title)
+        });
+        
+        if (!existing) {
+          await db
+            .insert(schema.laborContracts)
+            .values({
+              ...contract,
+              createdAt: new Date(),
+              updatedAt: new Date()
+            })
+            .returning();
+        } else {
+          console.log(`Contract with title ${contract.title} already exists, skipping`);
+        }
+      } catch (error) {
+        console.error(`Error adding labor contract ${contract.title}:`, error);
+      }
     }
 
     console.log(`Added ${laborContracts.length} labor contracts`);
