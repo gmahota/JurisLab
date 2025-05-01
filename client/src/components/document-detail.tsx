@@ -1,3 +1,4 @@
+import React from "react";
 import { JudicialDecision, LaborContract } from "@shared/schema";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,7 @@ import { X, Bookmark, Download, Share, Brain } from "lucide-react";
 import { queryClient } from "@/lib/queryClient";
 import { apiRequest } from "@/lib/queryClient";
 import { useMutation } from "@tanstack/react-query";
+import { AIAnalysisPanel } from "@/components/ai-analysis-panel";
 
 interface DocumentDetailProps {
   document: JudicialDecision | LaborContract;
@@ -155,27 +157,13 @@ export function DocumentDetail({ document, onClose, documentType }: DocumentDeta
           </div>
         )}
         
-        {/* AI Insights Section */}
-        {isJudicial && (
-          <div className="mb-6">
-            <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">AI Insights</h2>
-            <div className="bg-primary-50 dark:bg-primary-900/20 border border-primary-100 dark:border-primary-900/30 rounded-md p-4">
-              <div className="flex items-start">
-                <div className="p-2 rounded-full bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-300">
-                  <Brain className="h-4 w-4" />
-                </div>
-                <div className="ml-3">
-                  <h3 className="text-sm font-medium text-primary-900 dark:text-primary-100">Key Precedents</h3>
-                  <ul className="mt-2 text-sm text-primary-800 dark:text-primary-200 space-y-1">
-                    <li>• This case establishes new standards for remote work arrangements</li>
-                    <li>• Cites previous cases on workplace flexibility</li>
-                    <li>• Likely to be referenced in future labor disputes</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* AI Analysis Section */}
+        <div className="mb-6">
+          <AIAnalysisPanel 
+            document={document} 
+            documentType={documentType} 
+          />
+        </div>
         
         {/* Document Content Section */}
         <div className="mb-6">

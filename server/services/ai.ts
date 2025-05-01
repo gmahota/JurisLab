@@ -6,7 +6,7 @@ import { db } from "@db";
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // Utility function to safely parse JSON
-function safeJsonParse<T>(jsonString: string | null, defaultValue: T): T {
+function safeJsonParse<T>(jsonString: string | null | undefined, defaultValue: T): T {
   if (!jsonString) return defaultValue;
   
   try {
@@ -269,7 +269,10 @@ export const aiService = {
         response_format: { type: "json_object" }
       });
       
-      const insights = JSON.parse(response.choices[0].message.content) as Array<{ title: string; content: string }>;
+      const defaultInsights = [
+        { title: "No personalized insights available", content: "Insufficient data to generate personalized insights." }
+      ];
+      const insights = safeJsonParse(response.choices[0].message.content, defaultInsights);
       
       // Save the personalized insights
       for (const insight of insights) {
@@ -314,7 +317,11 @@ export const aiService = {
         response_format: { type: "json_object" }
       });
       
-      return JSON.parse(response.choices[0].message.content);
+      const defaultResult = {
+        keywords: ["No keywords available"],
+        summary: "Summary could not be generated."
+      };
+      return safeJsonParse(response.choices[0].message.content, defaultResult);
     } catch (error) {
       console.error("Error extracting document keywords:", error);
       throw new Error("Failed to extract document keywords");
@@ -358,7 +365,8 @@ export const aiService = {
         response_format: { type: "json_object" }
       });
       
-      return JSON.parse(response.choices[0].message.content);
+      const defaultResults: Array<{ id: number; title: string; relevanceScore: number; documentType: "judicial" | "contract" }> = [];
+      return safeJsonParse(response.choices[0].message.content, defaultResults);
     } catch (error) {
       console.error("Error suggesting relevant documents:", error);
       throw new Error("Failed to suggest relevant documents");
