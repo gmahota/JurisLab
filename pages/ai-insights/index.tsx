@@ -67,173 +67,173 @@ export default function AiInsights() {
           </p>
         </div>
       </div>
+      
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="trends" className="flex items-center gap-2">
+            <TrendingUp className="h-4 w-4" />
+            <span className="hidden sm:inline">Legal Trends</span>
+            <span className="sm:hidden">Trends</span>
+          </TabsTrigger>
+          <TabsTrigger value="recent" className="flex items-center gap-2">
+            <SparkleIcon className="h-4 w-4" />
+            <span className="hidden sm:inline">Recent Insights</span>
+            <span className="sm:hidden">Recent</span>
+          </TabsTrigger>
+          <TabsTrigger value="personalized" className="flex items-center gap-2">
+            <BrainCircuit className="h-4 w-4" />
+            <span className="hidden sm:inline">Personalized</span>
+            <span className="sm:hidden">For You</span>
+          </TabsTrigger>
+        </TabsList>
         
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="trends" className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4" />
-              <span className="hidden sm:inline">Legal Trends</span>
-              <span className="sm:hidden">Trends</span>
-            </TabsTrigger>
-            <TabsTrigger value="recent" className="flex items-center gap-2">
-              <SparkleIcon className="h-4 w-4" />
-              <span className="hidden sm:inline">Recent Insights</span>
-              <span className="sm:hidden">Recent</span>
-            </TabsTrigger>
-            <TabsTrigger value="personalized" className="flex items-center gap-2">
-              <BrainCircuit className="h-4 w-4" />
-              <span className="hidden sm:inline">Personalized</span>
-              <span className="sm:hidden">For You</span>
-            </TabsTrigger>
-          </TabsList>
-          
-          {/* Legal Trends Tab */}
-          <TabsContent value="trends" className="space-y-6">
-            {isLoadingTrends ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {Array(3).fill(0).map((_, i) => (
-                  <div key={i} className="h-64 bg-slate-100 dark:bg-slate-800 rounded-lg animate-pulse"></div>
-                ))}
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {trends?.emergingTrends?.map((trend, i) => (
-                  <Card key={i} className="overflow-hidden">
-                    <CardHeader className="pb-3">
-                      <div className="flex justify-between items-center">
-                        <CardTitle className="text-lg">{trend.title}</CardTitle>
-                        {getTrendIcon(trend.trend)}
-                      </div>
-                    </CardHeader>
-                    <CardContent className="text-sm text-slate-600 dark:text-slate-300">
-                      {trend.content}
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-            
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Top Legal Topics */}
-              <Card className="lg:col-span-2">
-                <CardHeader>
-                  <CardTitle className="flex items-center text-lg gap-2">
-                    <BarChart className="h-5 w-5 text-primary" /> 
-                    Top Legal Topics
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {isLoadingTrends ? (
-                    <div className="space-y-4">
-                      {Array(5).fill(0).map((_, i) => (
-                        <div key={i} className="h-8 bg-slate-100 dark:bg-slate-800 rounded animate-pulse"></div>
-                      ))}
+        {/* Legal Trends Tab */}
+        <TabsContent value="trends" className="space-y-6">
+          {isLoadingTrends ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array(3).fill(0).map((_, i) => (
+                <div key={i} className="h-64 bg-slate-100 dark:bg-slate-800 rounded-lg animate-pulse"></div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {trends?.emergingTrends?.map((trend, i) => (
+                <Card key={i} className="overflow-hidden">
+                  <CardHeader className="pb-3">
+                    <div className="flex justify-between items-center">
+                      <CardTitle className="text-lg">{trend.title}</CardTitle>
+                      {getTrendIcon(trend.trend)}
                     </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {trends?.topTopics?.map((topic, i) => (
-                        <div key={i} className="flex items-center">
-                          <div className="w-36 text-sm text-slate-600 dark:text-slate-300 font-medium">
-                            {topic.name}
-                          </div>
-                          <div className="relative flex-1 h-7">
-                            <div className="absolute inset-0 bg-slate-100 dark:bg-slate-800 rounded"></div>
-                            <div 
-                              className="absolute inset-y-0 left-0 bg-primary/20 rounded"
-                              style={{ width: `${topic.percentage}%` }}
-                            ></div>
-                            <div className="absolute inset-y-0 flex items-center justify-end right-2 text-xs font-medium">
-                              {topic.percentage}%
-                            </div>
+                  </CardHeader>
+                  <CardContent className="text-sm text-slate-600 dark:text-slate-300">
+                    {trend.content}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Top Legal Topics */}
+            <Card className="lg:col-span-2">
+              <CardHeader>
+                <CardTitle className="flex items-center text-lg gap-2">
+                  <BarChart className="h-5 w-5 text-primary" /> 
+                  Top Legal Topics
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {isLoadingTrends ? (
+                  <div className="space-y-4">
+                    {Array(5).fill(0).map((_, i) => (
+                      <div key={i} className="h-8 bg-slate-100 dark:bg-slate-800 rounded animate-pulse"></div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {trends?.topTopics?.map((topic, i) => (
+                      <div key={i} className="flex items-center">
+                        <div className="w-36 text-sm text-slate-600 dark:text-slate-300 font-medium">
+                          {topic.name}
+                        </div>
+                        <div className="relative flex-1 h-7">
+                          <div className="absolute inset-0 bg-slate-100 dark:bg-slate-800 rounded"></div>
+                          <div 
+                            className="absolute inset-y-0 left-0 bg-primary/20 rounded"
+                            style={{ width: `${topic.percentage}%` }}
+                          ></div>
+                          <div className="absolute inset-y-0 flex items-center justify-end right-2 text-xs font-medium">
+                            {topic.percentage}%
                           </div>
                         </div>
-                      ))}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-              
-              {/* Industry Summary */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center text-lg gap-2">
-                    <BrainCircuit className="h-5 w-5 text-primary" /> 
-                    Industry Summary
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {isLoadingTrends ? (
-                    <div className="h-40 bg-slate-100 dark:bg-slate-800 rounded animate-pulse"></div>
-                  ) : (
-                    <p className="text-sm text-slate-600 dark:text-slate-300">
-                      {trends?.industrySummary}
-                    </p>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-          
-          {/* Recent Insights Tab */}
-          <TabsContent value="recent">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {isLoadingRecent ? (
-                Array(6).fill(0).map((_, i) => (
-                  <div key={i} className="h-56 bg-slate-100 dark:bg-slate-800 rounded-lg animate-pulse"></div>
-                ))
-              ) : recentInsights && recentInsights.length > 0 ? (
-                recentInsights.map((insight) => (
-                  <Card key={insight.id} className="overflow-hidden">
-                    <CardHeader className="pb-3">
-                      <div className="flex justify-between">
-                        <CardTitle className="text-lg">{insight.title}</CardTitle>
-                        {insight.documentType && (
-                          <Badge variant="outline">
-                            {insight.documentType === 'judicial' ? 'Judicial' : 'Contract'}
-                          </Badge>
-                        )}
                       </div>
-                    </CardHeader>
-                    <CardContent className="text-sm text-slate-600 dark:text-slate-300">
-                      {insight.content}
-                    </CardContent>
-                  </Card>
-                ))
-              ) : (
-                <div className="col-span-full flex items-center justify-center py-12 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
-                  <p className="text-slate-500 dark:text-slate-400">No insights available yet.</p>
-                </div>
-              )}
-            </div>
-          </TabsContent>
-          
-          {/* Personalized Insights Tab */}
-          <TabsContent value="personalized">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {isLoadingPersonalized ? (
-                Array(3).fill(0).map((_, i) => (
-                  <div key={i} className="h-56 bg-slate-100 dark:bg-slate-800 rounded-lg animate-pulse"></div>
-                ))
-              ) : personalizedInsights && personalizedInsights.length > 0 ? (
-                personalizedInsights.map((insight, index) => (
-                  <AiInsightCard
-                    key={index}
-                    title={insight.title}
-                    content={insight.content}
-                    icon={<BrainCircuit className="h-5 w-5" />}
-                    iconBgClass="bg-primary-100 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400"
-                  />
-                ))
-              ) : (
-                <div className="col-span-full flex items-center justify-center py-12 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
-                  <p className="text-slate-500 dark:text-slate-400">
-                    No personalized insights available yet. Browse more documents to get tailored recommendations.
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+            
+            {/* Industry Summary */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center text-lg gap-2">
+                  <BrainCircuit className="h-5 w-5 text-primary" /> 
+                  Industry Summary
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {isLoadingTrends ? (
+                  <div className="h-40 bg-slate-100 dark:bg-slate-800 rounded animate-pulse"></div>
+                ) : (
+                  <p className="text-sm text-slate-600 dark:text-slate-300">
+                    {trends?.industrySummary}
                   </p>
-                </div>
-              )}
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+        
+        {/* Recent Insights Tab */}
+        <TabsContent value="recent">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {isLoadingRecent ? (
+              Array(6).fill(0).map((_, i) => (
+                <div key={i} className="h-56 bg-slate-100 dark:bg-slate-800 rounded-lg animate-pulse"></div>
+              ))
+            ) : recentInsights && recentInsights.length > 0 ? (
+              recentInsights.map((insight) => (
+                <Card key={insight.id} className="overflow-hidden">
+                  <CardHeader className="pb-3">
+                    <div className="flex justify-between">
+                      <CardTitle className="text-lg">{insight.title}</CardTitle>
+                      {insight.documentType && (
+                        <Badge variant="outline">
+                          {insight.documentType === 'judicial' ? 'Judicial' : 'Contract'}
+                        </Badge>
+                      )}
+                    </div>
+                  </CardHeader>
+                  <CardContent className="text-sm text-slate-600 dark:text-slate-300">
+                    {insight.content}
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <div className="col-span-full flex items-center justify-center py-12 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
+                <p className="text-slate-500 dark:text-slate-400">No insights available yet.</p>
+              </div>
+            )}
+          </div>
+        </TabsContent>
+        
+        {/* Personalized Insights Tab */}
+        <TabsContent value="personalized">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {isLoadingPersonalized ? (
+              Array(3).fill(0).map((_, i) => (
+                <div key={i} className="h-56 bg-slate-100 dark:bg-slate-800 rounded-lg animate-pulse"></div>
+              ))
+            ) : personalizedInsights && personalizedInsights.length > 0 ? (
+              personalizedInsights.map((insight, index) => (
+                <AiInsightCard
+                  key={index}
+                  title={insight.title}
+                  content={insight.content}
+                  icon={<BrainCircuit className="h-5 w-5" />}
+                  iconBgClass="bg-primary-100 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400"
+                />
+              ))
+            ) : (
+              <div className="col-span-full flex items-center justify-center py-12 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
+                <p className="text-slate-500 dark:text-slate-400">
+                  No personalized insights available yet. Browse more documents to get tailored recommendations.
+                </p>
+              </div>
+            )}
+          </div>
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 }
