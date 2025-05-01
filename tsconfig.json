@@ -1,10 +1,13 @@
 {
   "include": [
-    "client/src/**/*",
+    "components/**/*",
     "db/**/*",
     "server/**/*",
     "pages/**/*",
-    "shared/**/*"
+    "shared/**/*",
+    "hooks/**/*",
+    "lib/**/*",
+    "styles/**/*"
   ],
   "exclude": [
     "node_modules",
@@ -42,26 +45,23 @@
       "@db/*": [
         "./db/*"
       ],
-      "@/*": [
-        "./client/src/*"
+      "@/components/*": [
+        "./components/*"
+      ],
+      "@/lib/*": [
+        "./lib/*"
+      ],
+      "@/hooks/*": [
+        "./hooks/*"
+      ],
+      "@/pages/*": [
+        "./pages/*"
+      ],
+      "@/styles/*": [
+        "./styles/*"
       ],
       "@shared/*": [
         "./shared/*"
-      ],
-      "@components/*": [
-        "./client/src/components/*"
-      ],
-      "@lib/*": [
-        "./client/src/lib/*"
-      ],
-      "@hooks/*": [
-        "./client/src/hooks/*"
-      ],
-      "@pages/*": [
-        "./pages/*"
-      ],
-      "@styles/*": [
-        "./client/src/styles/*"
       ]
     },
     "allowJs": true

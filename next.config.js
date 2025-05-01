@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
+  // Remove swcMinify option as it's no longer necessary
   transpilePackages: ["@shadcn/ui"],
   modularizeImports: {
     "lucide-react": {
@@ -12,7 +12,7 @@ const nextConfig = {
     config.externals = [...config.externals, { canvas: "canvas" }];
     return config;
   },
-  // Add aliases to match previous Vite configuration
+  // Configure experimental features
   experimental: {
     esmExternals: true
   },
