@@ -44,10 +44,9 @@ export default function JudicialDecisions() {
       queryParams.append('limit', pageSize.toString());
       
       return apiRequest<{
-        results: JudicialDecision[];
-        total: number;
-        page: number;
-        pageSize: number;
+        decisions: JudicialDecision[];
+        totalDecisions: number;
+        currentPage: number;
         totalPages: number;
       }>('GET', `/api/judicial-decisions?${queryParams.toString()}`);
     },
@@ -77,7 +76,7 @@ export default function JudicialDecisions() {
     setCurrentPage(1);
   };
 
-  const decisions = data?.results || [];
+  const decisions = data?.decisions || [];
   const totalPages = data?.totalPages || 1;
 
   return (
@@ -87,7 +86,7 @@ export default function JudicialDecisions() {
           <div>
             <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Judicial Decisions</h1>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-              {isLoading ? 'Loading...' : `${data?.total || 0} decisions found`}
+              {isLoading ? 'Loading...' : `${data?.totalDecisions || 0} decisions found`}
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-2 self-stretch sm:self-auto">
