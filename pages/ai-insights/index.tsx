@@ -21,7 +21,7 @@ export default function AiInsights() {
   
   const { data: recentInsights, isLoading: isLoadingRecent } = useQuery({
     queryKey: ['/api/ai-insights/recent'],
-    queryFn: async () => apiRequest<{
+    queryFn: ({ queryKey }) => apiRequest<{
       id: number;
       title: string;
       content: string;
@@ -29,21 +29,21 @@ export default function AiInsights() {
       documentId: number | null;
       insightType: string;
       createdAt: string;
-    }[]>('GET', '/api/ai-insights/recent')
+    }[]>(queryKey[0])
   });
   
   const { data: trends, isLoading: isLoadingTrends } = useQuery({
-    queryKey: ['/api/ai-insights/trends'],
-    queryFn: async () => apiRequest<{
+    queryKey: ['/api/ai/legal-trends'],
+    queryFn: ({ queryKey }) => apiRequest<{
       emergingTrends: Array<{ title: string; content: string; trend: "up" | "down" | "neutral" }>;
       topTopics: Array<{ name: string; percentage: number }>;
       industrySummary: string;
-    }>('GET', '/api/ai-insights/trends')
+    }>(queryKey[0])
   });
   
   const { data: personalizedInsights, isLoading: isLoadingPersonalized } = useQuery({
-    queryKey: ['/api/ai/personalized-insights'],
-    queryFn: async () => apiRequest<Array<{ title: string; content: string }>>('POST', '/api/ai/personalized-insights'),
+    queryKey: ['/api/ai/personalized-insights?userId=1'], // Default user ID
+    queryFn: ({ queryKey }) => apiRequest<Array<{ title: string; content: string }>>(queryKey[0]),
     enabled: activeTab === 'personalized'
   });
   
