@@ -181,19 +181,18 @@ function NavLink({ href, icon, children, currentPath, onClick }: NavLinkProps) {
   const isActive = currentPath === href;
   
   return (
-    <Link href={href}>
-      <a
-        onClick={onClick}
-        className={cn(
-          "w-full flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors",
-          isActive
-            ? "bg-primary-50 text-primary-800 dark:bg-primary-900/50 dark:text-primary-300"
-            : "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
-        )}
-      >
-        <span className="mr-3">{icon}</span>
-        {children}
-      </a>
+    <Link 
+      href={href}
+      onClick={onClick}
+      className={cn(
+        "w-full flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors",
+        isActive
+          ? "bg-primary-50 text-primary-800 dark:bg-primary-900/50 dark:text-primary-300"
+          : "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+      )}
+    >
+      <span className="mr-3">{icon}</span>
+      {children}
     </Link>
   );
 }

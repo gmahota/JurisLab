@@ -378,10 +378,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const favorites = await storage.getUserFavorites(userId);
       const history = await storage.getUserHistory(userId);
       
+      // Create a flattened array of history items that match the required structure
+      const historyItems = Array.isArray(history) 
+        ? history 
+        : (typeof history === 'object' && history !== null)
+          ? Object.values(history).flatMap((group: any) => 
+              Array.isArray(group.activities) ? group.activities : []
+            )
+          : [];
+      
       const insights = await aiService.generatePersonalizedInsights(
         favorites.judicialDecisions,
         favorites.laborContracts,
-        history
+        historyItems
       );
       
       return res.json(insights);
