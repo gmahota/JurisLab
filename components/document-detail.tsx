@@ -10,8 +10,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useMutation } from "@tanstack/react-query";
-import { AIAnalysisPanel } from "@/components/ai-analysis-panel";
-import { DocumentAnalytics } from "@/components/document-analytics";
+import { AIAnalysisPanel } from "./ai-analysis-panel";
+import { DocumentAnalytics } from "./analytics/document-analytics";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface DocumentDetailProps {
