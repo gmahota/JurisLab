@@ -30,6 +30,18 @@ interface SearchResult {
   documentType: "judicial" | "contract";
 }
 
+// Helper function to safely parse JSON with fallback
+function safeJsonParse(jsonString: string | null): any {
+  if (!jsonString) return {};
+  
+  try {
+    return JSON.parse(jsonString);
+  } catch (error) {
+    console.error("Error parsing JSON:", error);
+    return {};
+  }
+}
+
 export const aiService = {
   /**
    * Analyze a judicial decision
@@ -56,7 +68,7 @@ export const aiService = {
       });
 
       // Parse the response
-      const result = JSON.parse(response.choices[0].message.content);
+      const result = safeJsonParse(response.choices[0].message.content);
       
       return {
         summary: result.summary || "AI analysis is being generated for this document.",
@@ -100,7 +112,7 @@ export const aiService = {
       });
 
       // Parse the response
-      const result = JSON.parse(response.choices[0].message.content);
+      const result = safeJsonParse(response.choices[0].message.content);
       
       return {
         summary: result.summary || "AI analysis is being generated for this document.",
@@ -153,7 +165,7 @@ export const aiService = {
       });
 
       // Parse the response
-      const result = JSON.parse(response.choices[0].message.content);
+      const result = safeJsonParse(response.choices[0].message.content);
       
       return {
         similarities: result.similarities || ["Analysis in progress"],
@@ -192,7 +204,7 @@ export const aiService = {
       });
 
       // Parse the response
-      const result = JSON.parse(response.choices[0].message.content);
+      const result = safeJsonParse(response.choices[0].message.content);
       
       // Process and format the trends
       return {
@@ -246,7 +258,7 @@ export const aiService = {
       });
 
       // Parse the response
-      const result = JSON.parse(response.choices[0].message.content);
+      const result = safeJsonParse(response.choices[0].message.content);
       
       return result.insights || [
         {
@@ -302,7 +314,7 @@ export const aiService = {
       });
 
       // Parse the response
-      const result = JSON.parse(response.choices[0].message.content);
+      const result = safeJsonParse(response.choices[0].message.content);
       
       return {
         keywords: result.keywords || ["Analysis in progress"],
@@ -340,7 +352,7 @@ export const aiService = {
       });
 
       // Parse the response
-      const result = JSON.parse(response.choices[0].message.content);
+      const result = safeJsonParse(response.choices[0].message.content);
       
       // Format the search results
       return {
