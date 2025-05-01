@@ -93,6 +93,78 @@ async function seed() {
         summary: "Class action lawsuit regarding wage theft allegations and employee classification in retail industry. The court certified a class of over 5,000 employees and established new standards for determining off-the-clock work.",
         content: "Full decision content would be here",
         tags: ["retail", "wage theft", "class action", "employee classification"]
+      },
+      {
+        title: "Davis v. City School District",
+        caseNumber: "2023-187",
+        jurisdiction: "State Court",
+        category: "Employment Law",
+        date: "2023-06-12",
+        judge: "Judge Rebecca Kim",
+        parties: "Michael Davis (Plaintiff) v. City School District (Defendant)",
+        summary: "This case addresses tenure rights and dismissal procedures for public school teachers. The court ruled that the district failed to follow proper evaluation procedures before termination, establishing a precedent for due process in educator employment.",
+        content: "Full decision content would be here",
+        tags: ["education", "tenure", "due process", "public employment"]
+      },
+      {
+        title: "Tech Innovations Inc. v. Santos",
+        caseNumber: "2023-214",
+        jurisdiction: "Federal Court",
+        category: "Intellectual Property",
+        date: "2023-07-28",
+        judge: "Judge Patricia Wilson",
+        parties: "Tech Innovations Inc. (Plaintiff) v. Carlos Santos (Defendant)",
+        summary: "Significant case concerning non-compete agreements and trade secrets in the software industry. The court limited the scope of the employer's non-compete agreement but upheld claims regarding misappropriation of specific proprietary algorithms.",
+        content: "Full decision content would be here",
+        tags: ["non-compete", "trade secrets", "software industry", "intellectual property"]
+      },
+      {
+        title: "National Hospitality Workers v. Luxury Hotels Group",
+        caseNumber: "2023-242",
+        jurisdiction: "Federal Court",
+        category: "Labor Law",
+        date: "2023-08-15",
+        judge: "Judge Marcus Washington",
+        parties: "National Hospitality Workers Union (Plaintiff) v. Luxury Hotels Group (Defendant)",
+        summary: "Class action regarding tip pooling arrangements and minimum wage violations in the hospitality industry. The court ruled that certain management positions cannot participate in tip pools and ordered significant back pay for affected workers.",
+        content: "Full decision content would be here",
+        tags: ["hospitality", "tip pooling", "minimum wage", "class action"]
+      },
+      {
+        title: "Green Manufacturing v. Environmental Protection Agency",
+        caseNumber: "2023-109",
+        jurisdiction: "Administrative",
+        category: "Environmental Law",
+        date: "2023-04-20",
+        judge: "Administrative Judge Elena Torres",
+        parties: "Green Manufacturing Corporation (Petitioner) v. Environmental Protection Agency (Respondent)",
+        summary: "Challenge to new workplace safety regulations related to chemical exposure in manufacturing settings. The administrative court upheld most regulations while requiring modification of monitoring requirements based on facility size.",
+        content: "Full decision content would be here",
+        tags: ["environmental regulations", "workplace safety", "manufacturing", "chemical exposure"]
+      },
+      {
+        title: "Jimenez v. Online Marketplace Inc.",
+        caseNumber: "2023-267",
+        jurisdiction: "State Court",
+        category: "Labor Law",
+        date: "2023-09-05",
+        judge: "Judge Samuel Richards",
+        parties: "Luis Jimenez and Others (Plaintiffs) v. Online Marketplace Inc. (Defendant)",
+        summary: "Novel case addressing worker classification for content moderators working remotely as contractors. The court established new multi-factor test for determining employment status in digital platform contexts.",
+        content: "Full decision content would be here",
+        tags: ["content moderation", "digital platforms", "remote work", "contractor classification"]
+      },
+      {
+        title: "Healthcare Alliance v. State Insurance Board",
+        caseNumber: "2023-295",
+        jurisdiction: "Supreme Court",
+        category: "Administrative Law",
+        date: "2023-10-10",
+        judge: "Justice B. Williams",
+        parties: "Healthcare Workers Alliance (Appellant) v. State Insurance Board (Respondent)",
+        summary: "Challenge to regulations affecting healthcare workers' compensation insurance requirements. The court upheld the state's authority to establish industry-specific insurance requirements while invalidating certain retroactive provisions.",
+        content: "Full decision content would be here",
+        tags: ["healthcare", "insurance", "workers compensation", "regulatory authority"]
       }
     ];
 

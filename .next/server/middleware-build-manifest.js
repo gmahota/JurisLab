@@ -24,11 +24,6 @@ globalThis.__BUILD_MANIFEST = {
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/judicial-decisions.js"
-    ],
-    "/labor-contracts": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/labor-contracts.js"
     ]
   },
   "ampFirstPages": []
