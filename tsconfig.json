@@ -1,25 +1,27 @@
 {
   "include": [
+    "actions/**/*",
+    "app/**/*",
     "components/**/*",
-    "db/**/*",
-    "server/**/*",
-    "pages/**/*",
-    "shared/**/*",
     "hooks/**/*",
     "lib/**/*",
-    "styles/**/*"
+    "next-env.d.ts",
+    "styles/**/*",
+    "types/**/*",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
     "build",
     "dist",
-    "**/*.test.ts"
+    "**/*.test.ts",
+    "legacy/**/*"
   ],
   "compilerOptions": {
     "incremental": true,
     "tsBuildInfoFile": "./node_modules/typescript/tsbuildinfo",
     "noEmit": true,
-    "target": "es5",
+    "target": "ES2017",
     "module": "ESNext",
     "strict": true,
     "lib": [
@@ -31,7 +33,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "baseUrl": ".",
@@ -39,12 +41,6 @@
       "node"
     ],
     "paths": {
-      "@db": [
-        "./db/index.ts"
-      ],
-      "@db/*": [
-        "./db/*"
-      ],
       "@/components/*": [
         "./components/*"
       ],
@@ -54,16 +50,24 @@
       "@/hooks/*": [
         "./hooks/*"
       ],
-      "@/pages/*": [
-        "./pages/*"
+      "@/types": [
+        "./types/index.ts"
       ],
-      "@/styles/*": [
-        "./styles/*"
+      "@/types/*": [
+        "./types/*"
       ],
-      "@shared/*": [
-        "./shared/*"
+      "@/actions/*": [
+        "./actions/*"
+      ],
+      "@/app/*": [
+        "./app/*"
       ]
     },
-    "allowJs": true
+    "allowJs": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   }
 }
