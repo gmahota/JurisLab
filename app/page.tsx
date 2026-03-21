@@ -41,11 +41,11 @@ export default function HomePage() {
         <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
           O futuro do
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
-            {' '}Direito Brasileiro
+            {' '}Direito Moçambicano
           </span>
         </h1>
         <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-10">
-          Acesse milhares de decisões judiciais, modelos de contratos trabalhistas e insights gerados
+          Acesse milhares de decisões judiciais, modelos de contratos e insights gerados
           por IA. Pesquise, analise e tome decisões com mais segurança jurídica.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -165,7 +165,6 @@ export default function HomePage() {
             <h3 className="text-2xl font-bold mb-4">Segurança e Confiabilidade</h3>
             <p className="text-slate-400 mb-6">
               Todos os dados são armazenados com criptografia de nível empresarial.
-              Conformidade total com a LGPD e as normas do CNJ.
             </p>
             <Link
               href="/dashboard"

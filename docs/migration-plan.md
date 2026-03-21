@@ -9,7 +9,7 @@ This document describes the migration from the legacy mixed architecture to the 
 The project had a hybrid, inconsistent structure mixing multiple frameworks:
 
 ```
-client/src/          ← Vite React app (never properly wired into Next.js)
+client/src/          ← Legacy React app (never properly wired into Next.js)
   components/
   pages/
   hooks/
@@ -23,8 +23,8 @@ pages/               ← Next.js Pages Router (partially migrated from client/sr
   ...
 
 server/              ← Express server (running next-server.ts, not used in Next.js mode)
-db/                  ← Drizzle ORM client (Neon serverless)
-shared/schema.ts     ← Drizzle schema definition
+db/                  ← Legacy ORM client (Neon serverless)
+shared/schema.ts     ← Legacy schema definition
 
 components/          ← shadcn/ui components (correct location)
 lib/                 ← Mixed utilities
@@ -36,7 +36,7 @@ hooks/               ← React hooks
 - Two parallel component trees (`client/src/components/` and `components/`)
 - Express server (`server/index.ts`) not compatible with Next.js deployment model
 - No App Router — missing RSC, Server Actions, streaming
-- Drizzle ORM instead of Prisma (less type-safe migrations, less ecosystem support)
+- Legacy ORM instead of Prisma (less type-safe migrations, less ecosystem support)
 - No clear separation between server and client code
 
 ## New Architecture (After)
@@ -58,7 +58,7 @@ middleware.ts        ← Route protection
 | Step | Status | Notes |
 |------|--------|-------|
 | Archive legacy code to `/legacy/` | ✅ Done | client/, server/, db/, shared/, pages/ |
-| Install Prisma + generate client | ✅ Done | Replaced Drizzle ORM |
+| Install Prisma + generate client | ✅ Done | Replaced legacy ORM |
 | Create `prisma/schema.prisma` | ✅ Done | All 7 models with proper enums |
 | Create `lib/prisma.ts` singleton | ✅ Done | Dev + production safe |
 | Create `types/index.ts` | ✅ Done | TypeScript types aligned with schema |
@@ -91,7 +91,7 @@ middleware.ts        ← Route protection
 ## Breaking Changes
 
 - The Express server (`server/index.ts`) is no longer the entry point — Next.js handles everything
-- Drizzle ORM is replaced by Prisma — requires `prisma db push` before first run
+- Legacy ORM is replaced by Prisma — requires `prisma db push` before first run
 - All routes now use App Router conventions (`app/` dir) instead of Pages Router (`pages/`)
 - API routes now live in `app/api/` not `pages/api/`
 - `DATABASE_URL` environment variable is still required (same format, works with Neon)

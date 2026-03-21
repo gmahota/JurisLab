@@ -72,12 +72,12 @@ types/                  # TypeScript type definitions
 
 middleware.ts           # Route protection middleware
 
-legacy/                 # Archived legacy code (pre-migration)
-  client/               # Original Vite/React client
-  server/               # Express server
-  db/                   # Drizzle ORM client
-  shared/               # Drizzle schema
-  pages/                # Next.js Pages Router (old)
+legacy/                 # Archived legacy code (pre-migration, not in use)
+  client/               # Original React client (archived)
+  server/               # Express server (archived)
+  db/                   # Legacy DB client (archived)
+  shared/               # Legacy schema (archived)
+  pages/                # Next.js Pages Router (archived)
 
 docs/                   # Documentation
 public/                 # Static assets
