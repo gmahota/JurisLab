@@ -1,0 +1,126 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum DocumentType {
+  JUDICIAL_DECISION
+  LABOR_CONTRACT
+}
+
+enum InsightType {
+  SUMMARY
+  ANALYSIS
+  TREND
+}
+
+enum NotificationType {
+  INFO
+  WARNING
+  SUCCESS
+}
+
+model User {
+  id           String         @id @default(cuid())
+  username     String         @unique
+  email        String         @unique
+  passwordHash String
+  fullName     String
+  role         Role           @default(USER)
+  slug         String         @unique
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  favorites    UserFavorite[]
+  history      UserHistory[]
+  notifications Notification[]
+}
+
+model JudicialDecision {
+  id           String   @id @default(cuid())
+  title        String
+  caseNumber   String   @unique
+  jurisdiction String
+  category     String
+  date         DateTime
+  judge        String
+  parties      String
+  summary      String
+  content      String
+  tags         String[]
+  slug         String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([title])
+  @@index([caseNumber])
+  @@index([jurisdiction])
+  @@index([category])
+}
+
+model LaborContract {
+  id           String   @id @default(cuid())
+  title        String
+  contractType String
+  industry     String
+  pages        Int
+  description  String
+  content      String
+  tags         String[]
+  downloads    Int      @default(0)
+  slug         String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model UserFavorite {
+  id           String       @id @default(cuid())
+  userId       String
+  documentType DocumentType
+  documentId   String
+  createdAt    DateTime     @default(now())
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, documentType, documentId])
+}
+
+model UserHistory {
+  id           String       @id @default(cuid())
+  userId       String
+  documentType DocumentType
+  documentId   String
+  action       String
+  createdAt    DateTime     @default(now())
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AiInsight {
+  id           String       @id @default(cuid())
+  title        String
+  content      String
+  documentType DocumentType?
+  documentId   String?
+  insightType  InsightType
+  confidence   Float        @default(0.9)
+  createdAt    DateTime     @default(now())
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      NotificationType @default(INFO)
+  read      Boolean          @default(false)
+  link      String?
+  createdAt DateTime         @default(now())
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
