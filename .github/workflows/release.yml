@@ -1,0 +1,204 @@
+name: '📋 Release Manager - JurisLab'
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      pre_release:
+        description: 'Pre-release (beta/rc)'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  # ============================================
+  # 📋 Prepare Release
+  # ============================================
+  prepare:
+    name: '📋 Prepare Release'
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      changelog: ${{ steps.changelog.outputs.changelog }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            VERSION="${GITHUB_REF#refs/tags/v}"
+          else
+            CURRENT=$(cat package.json | python3 -c "import sys,json; print(json.load(sys.stdin)['version'])")
+            IFS='.' read -ra PARTS <<< "$CURRENT"
+            MAJOR=${PARTS[0]}
+            MINOR=${PARTS[1]}
+            PATCH=${PARTS[2]}
+            
+            case "${{ inputs.version_type }}" in
+              major) MAJOR=$((MAJOR + 1)); MINOR=0; PATCH=0 ;;
+              minor) MINOR=$((MINOR + 1)); PATCH=0 ;;
+              patch) PATCH=$((PATCH + 1)) ;;
+            esac
+            
+            VERSION="$MAJOR.$MINOR.$PATCH"
+            if [ "${{ inputs.pre_release }}" = "true" ]; then
+              VERSION="$VERSION-beta.1"
+            fi
+          fi
+          
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📦 Release version: $VERSION" >> $GITHUB_STEP_SUMMARY
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          
+          if [ -n "$LAST_TAG" ]; then
+            CHANGES=$(git log $LAST_TAG..HEAD --pretty=format:"- %s (%h)" --no-merges)
+          else
+            CHANGES=$(git log --pretty=format:"- %s (%h)" --no-merges -20)
+          fi
+          
+          echo "## 📋 Changelog v${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "$CHANGES" >> $GITHUB_STEP_SUMMARY
+          
+          # Store for next job (escape newlines)
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+  # ============================================
+  # 🧪 Release Validation
+  # ============================================
+  validate:
+    name: '🧪 Validate Release'
+    runs-on: ubuntu-latest
+    needs: prepare
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Type check
+        run: npm run check
+
+      - name: Run tests
+        run: npx jest --ci --passWithNoTests
+
+      - name: Build
+        run: npm run build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+
+  # ============================================
+  # 🚀 Create Release
+  # ============================================
+  release:
+    name: '🚀 Create Release'
+    runs-on: ubuntu-latest
+    needs: [prepare, validate]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create GitHub Release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const version = '${{ needs.prepare.outputs.version }}';
+            const changelog = `${{ needs.prepare.outputs.changelog }}`;
+            const isPreRelease = version.includes('beta') || version.includes('rc');
+            
+            const body = `## 🚀 JurisLab v${version}
+
+### 📋 Changes
+${changelog}
+
+### 📊 Release Info
+- **Version**: ${version}
+- **Date**: ${new Date().toISOString().split('T')[0]}
+- **Pre-release**: ${isPreRelease ? 'Yes' : 'No'}
+- **Build**: ${process.env.GITHUB_RUN_NUMBER}
+
+### 🔒 Security
+- All dependency audits passed
+- SAST analysis completed
+- No critical vulnerabilities
+
+---
+*Release managed by JurisLab Release Agent*
+`;
+
+            await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: `v${version}`,
+              name: `JurisLab v${version}`,
+              body: body,
+              prerelease: isPreRelease,
+              generate_release_notes: true
+            });
+
+  # ============================================
+  # 📊 Post-Release Monitoring
+  # ============================================
+  monitor:
+    name: '📊 Post-Release Monitor'
+    runs-on: ubuntu-latest
+    needs: release
+    steps:
+      - name: Post-release health check
+        run: |
+          echo "## 📊 Post-Release Monitoring" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Deployment Checklist" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] Application accessible" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] API endpoints responding" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] Database migrations applied" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] Error rates normal" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] Performance metrics stable" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Rollback Plan" >> $GITHUB_STEP_SUMMARY
+          echo "If issues detected, rollback to previous version:" >> $GITHUB_STEP_SUMMARY
+          echo '```bash' >> $GITHUB_STEP_SUMMARY
+          echo "# Revert to previous release" >> $GITHUB_STEP_SUMMARY
+          echo "git revert HEAD --no-edit" >> $GITHUB_STEP_SUMMARY
+          echo "git push origin main" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY

@@ -1,0 +1,107 @@
+name: ✨ Feature Request
+description: Sugerir uma nova funcionalidade para o JurisLab
+title: "[FEATURE] "
+labels: ["enhancement"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ✨ Solicitação de Funcionalidade - JurisLab
+        Descreva a funcionalidade que gostaria de ver implementada.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: "📍 Módulo"
+      description: "A qual módulo esta feature se relaciona?"
+      options:
+        - "📋 Contratos Trabalhistas"
+        - "⚖️ Decisões Judiciais"
+        - "🤖 IA / Análise Inteligente"
+        - "🔍 Busca e Filtros"
+        - "📊 Dashboard / Relatórios"
+        - "🔐 Autenticação / Permissões"
+        - "📱 Interface / UI"
+        - "🔗 API / Backend"
+        - "🆕 Novo Módulo"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: impact
+    attributes:
+      label: "📊 Impacto Estimado"
+      description: "Qual o impacto esperado desta feature?"
+      options:
+        - "🔴 Alto - Afeta muitos usuários / Core business"
+        - "🟡 Médio - Melhoria significativa para grupo de usuários"
+        - "🟢 Baixo - Nice to have / Melhoria incremental"
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: "🎯 Problema / Necessidade"
+      description: "Qual problema esta feature resolve?"
+      placeholder: "Descreva o problema ou necessidade que motivou esta sugestão..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: "💡 Solução Proposta"
+      description: "Como você imagina esta funcionalidade?"
+      placeholder: "Descreva sua ideia de solução..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: "🔄 Alternativas Consideradas"
+      description: "Existem outras formas de resolver este problema?"
+      placeholder: "Descreva alternativas que você considerou..."
+
+  - type: textarea
+    id: user-story
+    attributes:
+      label: "👤 User Story"
+      description: "Descreva do ponto de vista do usuário"
+      value: |
+        **Como** [tipo de usuário],
+        **Eu quero** [ação/funcionalidade],
+        **Para que** [benefício/objetivo].
+
+  - type: dropdown
+    id: effort
+    attributes:
+      label: "⏱️ Estimativa de Esforço"
+      options:
+        - "Pequeno (1-2 dias)"
+        - "Médio (3-5 dias)"
+        - "Grande (1-2 semanas)"
+        - "Épico (> 2 semanas)"
+        - "Não sei estimar"
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: "✅ Critérios de Aceitação"
+      description: "Quando podemos considerar esta feature completa?"
+      value: |
+        - [ ] Critério 1
+        - [ ] Critério 2
+        - [ ] Critério 3
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "✅ Checklist"
+      options:
+        - label: "Verifiquei se já existe uma feature request similar"
+          required: true
+        - label: "Esta feature está alinhada com o roadmap do produto"
+        - label: "Considerei aspectos de segurança e privacidade"

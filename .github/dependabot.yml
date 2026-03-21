@@ -1,0 +1,105 @@
+# ============================================
+# 📦 Dependabot Configuration - JurisLab
+# ============================================
+# Automated dependency updates with security focus
+# ============================================
+
+version: 2
+
+registries: {}
+
+updates:
+  # ============================================
+  # 📦 NPM Dependencies
+  # ============================================
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "America/Sao_Paulo"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "jurislab/cto"
+      - "jurislab/backend"
+    labels:
+      - "dependencies"
+      - "automated"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    # Group minor/patch updates together
+    groups:
+      radix-ui:
+        patterns:
+          - "@radix-ui/*"
+        update-types:
+          - "minor"
+          - "patch"
+      react-ecosystem:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "react-hook-form"
+          - "@tanstack/*"
+        update-types:
+          - "minor"
+          - "patch"
+      next-ecosystem:
+        patterns:
+          - "next"
+          - "next-*"
+        update-types:
+          - "minor"
+          - "patch"
+      prisma:
+        patterns:
+          - "prisma"
+          - "@prisma/*"
+        update-types:
+          - "minor"
+          - "patch"
+      ai-providers:
+        patterns:
+          - "@anthropic-ai/*"
+          - "openai"
+        update-types:
+          - "minor"
+          - "patch"
+      dev-tools:
+        dependency-type: "development"
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    # Security updates (always allowed)
+    allow:
+      - dependency-type: "all"
+    # Ignore major versions (require manual review)
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
+
+  # ============================================
+  # 🔧 GitHub Actions
+  # ============================================
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "America/Sao_Paulo"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "jurislab/cto"
+      - "jurislab/devops"
+    labels:
+      - "devops"
+      - "dependencies"
+      - "automated"
+    commit-message:
+      prefix: "ci"

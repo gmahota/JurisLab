@@ -1,0 +1,100 @@
+name: 🔧 DevOps Issue
+description: Reportar problema ou solicitar melhoria de infraestrutura
+title: "[DEVOPS] "
+labels: ["devops"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🔧 DevOps / Infraestrutura - JurisLab
+        Issue relacionada a CI/CD, deploy, monitoramento ou infraestrutura.
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: "📍 Categoria"
+      options:
+        - "🚀 CI/CD Pipeline"
+        - "☁️ Infraestrutura / Cloud"
+        - "📊 Monitoramento / Alertas"
+        - "🔄 Deploy / Release"
+        - "💾 Banco de Dados / Migrations"
+        - "🐳 Containers / Docker"
+        - "🔒 Secrets Management"
+        - "📦 Dependency Management"
+        - "🔧 Configuração / Environment"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: urgency
+    attributes:
+      label: "⚡ Urgência"
+      options:
+        - "🔴 Produção afetada agora"
+        - "🟠 Precisa resolver esta sprint"
+        - "🟡 Pode ser planejado"
+        - "🟢 Melhoria para o futuro"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "📝 Descrição"
+      description: "Descreva o problema ou melhoria de infraestrutura"
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-state
+    attributes:
+      label: "📊 Estado Atual"
+      description: "Como está configurado atualmente?"
+      placeholder: "Descreva a configuração/estado atual..."
+
+  - type: textarea
+    id: desired-state
+    attributes:
+      label: "🎯 Estado Desejado"
+      description: "Como deveria funcionar?"
+      placeholder: "Descreva o resultado esperado..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: rollback
+    attributes:
+      label: "🔄 Estratégia de Rollback"
+      description: "Como reverter se algo der errado?"
+      value: |
+        **Plano de Rollback:**
+        1. 
+        2. 
+        3. 
+        
+        **Tempo estimado de rollback:**
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: "📊 Impacto"
+      description: "Qual o impacto desta mudança?"
+      value: |
+        **Serviços afetados:**
+        - 
+        
+        **Downtime esperado:**
+        
+        **Usuários impactados:**
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "✅ Checklist"
+      options:
+        - label: "Tenho um plano de rollback definido"
+        - label: "Testei em ambiente de staging"
+        - label: "Documentei as mudanças necessárias"
+        - label: "Notifiquei os stakeholders sobre possível impacto"

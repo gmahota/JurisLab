@@ -1,0 +1,78 @@
+# ============================================
+# 📋 CODEOWNERS - JurisLab
+# ============================================
+# Este arquivo define os responsáveis por cada
+# área do código. Revisões são automaticamente
+# solicitadas aos owners relevantes.
+# ============================================
+
+# 🏗️ Configuração Global / Infraestrutura
+*.json                          @jurislab/cto @jurislab/devops
+*.config.*                      @jurislab/cto @jurislab/devops
+*.ts                            @jurislab/backend
+*.tsx                           @jurislab/frontend
+
+# 🔒 Segurança - Requer aprovação do CTO
+middleware.ts                   @jurislab/cto @jurislab/security
+lib/auth.ts                     @jurislab/cto @jurislab/security
+lib/permissions.ts              @jurislab/cto @jurislab/security
+
+# 💾 Banco de Dados - Requer review cuidadoso
+prisma/                         @jurislab/cto @jurislab/backend
+prisma/schema.prisma            @jurislab/cto @jurislab/backend
+
+# 🔗 API / Backend
+app/api/                        @jurislab/backend
+actions/                        @jurislab/backend
+lib/                            @jurislab/backend
+
+# 📱 Frontend / UI
+app/dashboard/                  @jurislab/frontend
+app/admin/                      @jurislab/frontend @jurislab/cto
+components/                     @jurislab/frontend
+components/ui/                  @jurislab/frontend
+
+# 🤖 IA / Machine Learning
+lib/ai-service.ts               @jurislab/ai-team @jurislab/cto
+actions/insights.ts             @jurislab/ai-team
+
+# 📊 Dashboard Components
+components/dashboard/           @jurislab/frontend
+
+# 🎨 Estilos / Design System
+app/globals.css                 @jurislab/frontend
+tailwind.config.ts              @jurislab/frontend
+
+# 🧪 Testes
+jest.config.js                  @jurislab/backend @jurislab/frontend
+jest.setup.js                   @jurislab/backend @jurislab/frontend
+**/*.test.ts                    @jurislab/backend
+**/*.test.tsx                   @jurislab/frontend
+**/*.spec.ts                    @jurislab/backend
+
+# 🏗️ DevOps / CI-CD
+.github/                        @jurislab/cto @jurislab/devops
+.github/workflows/              @jurislab/cto @jurislab/devops
+
+# 📝 Documentação
+docs/                           @jurislab/cto
+*.md                            @jurislab/cto
+migration-plan.md               @jurislab/cto @jurislab/backend
+
+# 🔧 Tipos / Definições
+types/                          @jurislab/backend @jurislab/frontend
+
+# 📦 Hooks customizados
+hooks/                          @jurislab/frontend
+
+# 🗂️ Legacy Code - Requer aprovação para mudanças
+legacy/                         @jurislab/cto @jurislab/backend
+
+# 🌐 Arquivos públicos / SEO
+public/                         @jurislab/frontend
+public/manifest.json            @jurislab/frontend @jurislab/cto
+public/robots.txt               @jurislab/cto
+public/sitemap.xml              @jurislab/cto
+
+# 📋 Validadores
+lib/validators/                 @jurislab/backend @jurislab/security

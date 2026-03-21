@@ -1,0 +1,63 @@
+name: ❓ Support Question
+description: Fazer uma pergunta sobre o JurisLab
+title: "[SUPPORT] "
+labels: ["question"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ❓ Pergunta de Suporte - JurisLab
+        Faça sua pergunta e tentaremos ajudar o mais rápido possível.
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: "📍 Categoria"
+      description: "Qual área da sua pergunta?"
+      options:
+        - "🚀 Instalação / Setup"
+        - "⚙️ Configuração"
+        - "📋 Contratos Trabalhistas"
+        - "⚖️ Decisões Judiciais"
+        - "🤖 IA / Análise Inteligente"
+        - "🔐 Autenticação / Permissões"
+        - "🔗 API / Integração"
+        - "📊 Dashboard / Relatórios"
+        - "🔧 DevOps / Deploy"
+        - "📝 Documentação"
+        - "🔧 Outro"
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: "❓ Sua Pergunta"
+      description: "Descreva sua dúvida em detalhes"
+      placeholder: "Descreva sua pergunta aqui..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: "📋 Contexto"
+      description: "Forneça contexto adicional que possa ajudar"
+      placeholder: "O que você já tentou? Qual sua configuração?"
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: "📸 Logs / Screenshots"
+      description: "Adicione logs ou screenshots relevantes"
+      placeholder: "Cole logs ou screenshots aqui..."
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "✅ Checklist"
+      options:
+        - label: "Li a documentação disponível"
+        - label: "Busquei por issues similares"
+        - label: "Verifiquei o FAQ"

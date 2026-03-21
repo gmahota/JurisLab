@@ -1,0 +1,118 @@
+name: 🐛 Bug Report
+description: Reportar um bug ou problema no JurisLab
+title: "[BUG] "
+labels: ["bug"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🐛 Relatório de Bug - JurisLab
+        Obrigado por reportar este problema! Preencha as informações abaixo para nos ajudar a resolver rapidamente.
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: "🔴 Severidade"
+      description: "Qual o impacto deste bug?"
+      options:
+        - "🔴 Crítico - Sistema indisponível / Perda de dados"
+        - "🟠 Alto - Funcionalidade principal quebrada"
+        - "🟡 Médio - Funcionalidade secundária com problemas"
+        - "🟢 Baixo - Problema cosmético / Inconveniência menor"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: "📍 Área Afetada"
+      description: "Qual módulo do sistema é afetado?"
+      options:
+        - "📋 Contratos Trabalhistas"
+        - "⚖️ Decisões Judiciais"
+        - "🤖 IA / Análise Inteligente"
+        - "🔍 Busca e Filtros"
+        - "📊 Dashboard / Relatórios"
+        - "🔐 Autenticação / Permissões"
+        - "📱 Interface / UI"
+        - "🔗 API / Backend"
+        - "💾 Banco de Dados"
+        - "🔧 Outro"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "📝 Descrição do Bug"
+      description: "Descreva claramente o que está acontecendo"
+      placeholder: "Descreva o bug em detalhes..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: "🔄 Passos para Reproduzir"
+      description: "Como podemos reproduzir este bug?"
+      value: |
+        1. Vá para '...'
+        2. Clique em '...'
+        3. Scroll até '...'
+        4. Veja o erro
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: "✅ Comportamento Esperado"
+      description: "O que deveria acontecer?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: "❌ Comportamento Atual"
+      description: "O que realmente acontece?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: "📸 Screenshots / Logs"
+      description: "Adicione screenshots ou logs de erro se disponíveis"
+      placeholder: "Cole screenshots ou logs aqui..."
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: "🌐 Navegador"
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Outro
+    validations:
+      required: false
+
+  - type: input
+    id: version
+    attributes:
+      label: "📦 Versão"
+      description: "Qual versão do JurisLab?"
+      placeholder: "ex: 1.0.0"
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "✅ Checklist"
+      options:
+        - label: "Verifiquei se já existe uma issue Similar"
+          required: true
+        - label: "Consigo reproduzir o bug consistentemente"
+        - label: "Testei em outro navegador"

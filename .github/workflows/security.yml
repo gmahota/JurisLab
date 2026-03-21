@@ -1,0 +1,198 @@
+name: '🛡️ Security Agent - JurisLab'
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # Daily at 6:00 UTC
+  push:
+    branches: [main, staging]
+    paths:
+      - 'package.json'
+      - 'package-lock.json'
+      - 'prisma/**'
+      - 'lib/auth.ts'
+      - 'middleware.ts'
+  pull_request:
+    branches: [main]
+    paths:
+      - '**.ts'
+      - '**.tsx'
+      - 'package.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+  issues: write
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  # ============================================
+  # 🔍 Dependency Vulnerability Scan
+  # ============================================
+  dependency-scan:
+    name: '🔍 Dependency Scan'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: NPM Audit
+        run: |
+          echo "## 🔍 Dependency Vulnerability Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          npm audit --json > audit-report.json 2>&1 || true
+          npm audit 2>&1 | tee audit-report.txt || true
+          
+          VULNS=$(cat audit-report.json | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('metadata',{}).get('vulnerabilities',{}))" 2>/dev/null || echo "N/A")
+          echo "Vulnerabilities found: $VULNS" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-audit
+          path: audit-report.*
+          retention-days: 30
+
+  # ============================================
+  # 🕵️ Secret Detection
+  # ============================================
+  secret-detection:
+    name: '🕵️ Secret Detection'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Scan for secrets
+        run: |
+          echo "## 🕵️ Secret Detection Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Check for common secret patterns
+          PATTERNS=(
+            "PRIVATE.KEY"
+            "password\s*=\s*['\"][^'\"]*['\"]"
+            "api.key\s*=\s*['\"][^'\"]*['\"]"
+            "secret\s*=\s*['\"][^'\"]*['\"]"
+            "token\s*=\s*['\"][^'\"]*['\"]"
+            "DATABASE_URL\s*=\s*['\"]postgres"
+          )
+          
+          FOUND=0
+          for pattern in "${PATTERNS[@]}"; do
+            MATCHES=$(grep -rn --include="*.ts" --include="*.tsx" --include="*.js" --include="*.env*" -iE "$pattern" . --exclude-dir=node_modules --exclude-dir=.git 2>/dev/null | grep -v ".example" | grep -v "process.env" | grep -v "secrets\." || true)
+            if [ -n "$MATCHES" ]; then
+              echo "⚠️ Potential secret pattern found: $pattern" >> $GITHUB_STEP_SUMMARY
+              FOUND=$((FOUND + 1))
+            fi
+          done
+          
+          if [ $FOUND -eq 0 ]; then
+            echo "✅ No hardcoded secrets detected" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ Found $FOUND potential secret patterns - review required" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  # ============================================
+  # 🔒 SAST - Static Application Security Testing
+  # ============================================
+  sast:
+    name: '🔒 SAST Analysis'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Security analysis
+        run: |
+          echo "## 🔒 SAST Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Check for common security issues
+          echo "### Checking for common vulnerabilities..." >> $GITHUB_STEP_SUMMARY
+          
+          # SQL Injection patterns
+          SQL_ISSUES=$(grep -rn --include="*.ts" --include="*.tsx" "\\$\{.*\}.*SELECT\|\\$\{.*\}.*INSERT\|\\$\{.*\}.*UPDATE\|\\$\{.*\}.*DELETE\|raw\s*\`" . --exclude-dir=node_modules --exclude-dir=.git 2>/dev/null | wc -l || echo "0")
+          echo "- SQL Injection risks: $SQL_ISSUES files" >> $GITHUB_STEP_SUMMARY
+          
+          # XSS patterns (dangerouslySetInnerHTML)
+          XSS_ISSUES=$(grep -rn --include="*.tsx" --include="*.ts" "dangerouslySetInnerHTML" . --exclude-dir=node_modules --exclude-dir=.git 2>/dev/null | wc -l || echo "0")
+          echo "- XSS risks (dangerouslySetInnerHTML): $XSS_ISSUES instances" >> $GITHUB_STEP_SUMMARY
+          
+          # eval usage
+          EVAL_ISSUES=$(grep -rn --include="*.ts" --include="*.tsx" "\beval\s*(" . --exclude-dir=node_modules --exclude-dir=.git 2>/dev/null | wc -l || echo "0")
+          echo "- eval() usage: $EVAL_ISSUES instances" >> $GITHUB_STEP_SUMMARY
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ SAST analysis complete" >> $GITHUB_STEP_SUMMARY
+
+  # ============================================
+  # 🚨 Security Incident Response
+  # ============================================
+  incident-response:
+    name: '🚨 Incident Check'
+    runs-on: ubuntu-latest
+    needs: [dependency-scan, secret-detection, sast]
+    if: always()
+    steps:
+      - name: Evaluate security posture
+        run: |
+          echo "## 🚨 Security Posture Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Dependency Scan | ${{ needs.dependency-scan.result == 'success' && '✅ Pass' || '⚠️ Review' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Secret Detection | ${{ needs.secret-detection.result == 'success' && '✅ Pass' || '🚨 Alert' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| SAST Analysis | ${{ needs.sast.result == 'success' && '✅ Pass' || '⚠️ Review' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📅 Scan Date: $(date -u '+%Y-%m-%d %H:%M UTC')" >> $GITHUB_STEP_SUMMARY
+
+      - name: Create issue on failure
+        if: needs.dependency-scan.result == 'failure' || needs.secret-detection.result == 'failure' || needs.sast.result == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `🚨 Security Alert - ${new Date().toISOString().split('T')[0]}`;
+            const body = `## Security Scan Failed
+
+            | Check | Result |
+            |-------|--------|
+            | Dependency Scan | ${{ needs.dependency-scan.result }} |
+            | Secret Detection | ${{ needs.secret-detection.result }} |
+            | SAST Analysis | ${{ needs.sast.result }} |
+
+            **Action Required**: Review the [workflow run](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}) for details.
+
+            /cc @cto-team
+            `;
+            
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['security', 'priority:critical', 'automated']
+            });

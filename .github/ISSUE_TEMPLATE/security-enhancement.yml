@@ -1,0 +1,103 @@
+name: 🔒 Security Enhancement
+description: Sugerir melhoria de segurança ou reportar preocupação
+title: "[SECURITY] "
+labels: ["security"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🔒 Melhoria de Segurança - JurisLab
+        
+        ⚠️ **IMPORTANTE**: Se você encontrou uma vulnerabilidade ativa, NÃO reporte aqui.
+        Use o canal de segurança privado ou envie email para a equipe de segurança.
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: "🔒 Tipo"
+      description: "Qual tipo de melhoria de segurança?"
+      options:
+        - "🛡️ Melhoria de Segurança Geral"
+        - "🔐 Autenticação / Autorização"
+        - "🔑 Criptografia / Proteção de Dados"
+        - "🕵️ Detecção de Ameaças"
+        - "📋 Compliance / Regulatório"
+        - "🔍 Auditoria / Logging"
+        - "🌐 Segurança de Rede"
+        - "📦 Dependências / Supply Chain"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: "⚠️ Nível de Risco"
+      options:
+        - "🔴 Crítico - Exploração ativa possível"
+        - "🟠 Alto - Vulnerabilidade significativa"
+        - "🟡 Médio - Risco moderado"
+        - "🟢 Baixo - Melhoria preventiva"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "📝 Descrição"
+      description: "Descreva a melhoria de segurança proposta"
+      placeholder: "Descreva a preocupação de segurança e a melhoria proposta..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-state
+    attributes:
+      label: "📊 Estado Atual"
+      description: "Como está atualmente (sem expor dados sensíveis)"
+      placeholder: "Descreva o estado atual da segurança nesta área..."
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: "💡 Solução Proposta"
+      description: "Como deveria ser implementado?"
+      placeholder: "Descreva a solução proposta..."
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: compliance
+    attributes:
+      label: "📋 Compliance Checklist"
+      description: "Quais padrões de compliance são relevantes?"
+      options:
+        - label: "LGPD (Lei Geral de Proteção de Dados)"
+        - label: "OWASP Top 10"
+        - label: "SOC 2"
+        - label: "ISO 27001"
+        - label: "PCI DSS"
+        - label: "Regulamentações trabalhistas específicas"
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: "📊 Análise de Impacto"
+      description: "Qual o impacto de não implementar esta melhoria?"
+      value: |
+        **Risco se não implementado:**
+        - 
+        
+        **Benefícios da implementação:**
+        - 
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "✅ Checklist"
+      options:
+        - label: "Não estou expondo dados sensíveis nesta issue"
+          required: true
+        - label: "Verifiquei se já existe uma issue similar"
+          required: true
+        - label: "Esta melhoria é preventiva (não há exploração ativa)"
